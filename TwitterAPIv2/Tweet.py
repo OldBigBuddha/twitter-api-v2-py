@@ -1,9 +1,10 @@
 from enum import Enum
 from datetime import datetime
-from typing import Any, Optional
+from typing import Dict, List, Optional
 
-from TwitterAPIv2.util import get_additional_field
+from TwitterAPIv2.Media import Media
 from TwitterAPIv2.Metric import PublicMetric
+from TwitterAPIv2.util import get_additional_field
 
 
 class Field(Enum):
@@ -25,6 +26,21 @@ class Field(Enum):
     REFERENCED_TWEET = 'referenced_tweets'
     SOURCE = 'source'
     WITHHELD = 'withheld'
+
+    def __str__(self) -> str:
+        return self.value
+
+
+class Expantion(Enum):
+
+    AUTHOR_ID: str = 'author_id'
+    REFERENCED_TWEETS_ID: str = 'referenced_tweets.id'
+    IN_REPLY_TO_USER_ID: str = 'in_reply_to_user_id'
+    MEDIA_KEYS: str = 'attachments.media_keys'
+    POLL_IDS: str = 'attachments.poll_ids'
+    PLACE_ID: str = 'geo.place_id'
+    MENTIONS_USERNAME: str = 'entities.mentions.username'
+    REFERENCED_TWEETS_AUTHOR_ID: str = 'referenced_tweets.id.author_id'
 
     def __str__(self) -> str:
         return self.value
@@ -67,3 +83,10 @@ class Tweet:
         self.source: Optional[str] = get_additional_field(kwargs, 'source')
         self.truncated: Optional[bool] = get_additional_field(kwargs, 'truncated')
         self.withheld = get_additional_field(kwargs, 'withheld')
+
+        # attachment
+        self.medias: Optional[List[Media]] = None
+        if 'media' in kwargs.keys():
+            self.medias = []
+            for media in kwargs['media']:
+                self.medias.append(Media(media))

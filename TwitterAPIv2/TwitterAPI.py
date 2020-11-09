@@ -1,9 +1,16 @@
 import json
+from logging import Logger
+import logging
 from typing import Dict, List, Optional
 
 import requests
 
 from TwitterAPIv2 import Tweet
+from TwitterAPIv2 import Media
+
+
+logger: Logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 
 class TwitterAPI:
@@ -15,13 +22,27 @@ class TwitterAPI:
 
         self.__API_URL: str = 'https://api.twitter.com/2/tweets'
 
-    def get_tweet(self, id: str, fields: List[Tweet.Field] = []) -> Tweet.Tweet:
-        params: Optional[Dict[str, str]] = None
-        if fields:
-            params_str: List[str] = list(map(str, fields))
-            params = {
-                'tweet.fields': ','.join(params_str)
-            }
+    def get_tweet(self, id: str, expansions: List[Tweet.Expantion] = [], tweet_fields: List[Tweet.Field] = [], media_fields: List[Media.Field] = []) -> Tweet.Tweet:
+        params: Optional[Dict[str, str]] = self._make_params(expansions, tweet_fields, media_fields)
+        logger.debug(params)
         response = requests.get(url=f'{self.__API_URL}/{id}', params=params, headers=self.__REQUEST_HEADERS)
         res_json = json.loads(response.text)
-        return Tweet.Tweet(**res_json['data'])
+        logger.debug(res_json)
+        if 'includes' in res_json.keys():
+            return Tweet.Tweet(**res_json['data'], **res_json['includes'])
+        else:
+            return Tweet.Tweet(**res_json['data'])
+
+    def _make_params(self, expansions: List[Tweet.Expantion], tweet_fields: List[Tweet.Field], media_fields: List[Media.Field]) -> Optional[Dict[str, str]]:
+        if (not expansions) and (not tweet_fields) and (not media_fields):
+            return None
+
+        params: Dict[str, str] = {}
+        if expansions:
+            params['expansions'] = ','.join(list(map(str, expansions)))
+        if tweet_fields:
+            params['tweet.fields'] = ','.join(list(map(str, tweet_fields)))
+        if media_fields:
+            params['media.fields'] = ','.join(list(map(str, media_fields)))
+
+        return params

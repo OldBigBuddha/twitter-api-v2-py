@@ -1,6 +1,3 @@
-from typing import Optional
-
-
 class PublicMetric:
 
     def __init__(self, data: dict) -> None:
