@@ -2,6 +2,8 @@ from enum import Enum
 from datetime import datetime
 from typing import Any, Optional
 
+from TwitterAPIv2.Metric import PublicMetric
+
 
 class Field(Enum):
 
@@ -51,12 +53,18 @@ class Tweet:
         self.in_reply_to_user_id = self.get_additional_field('in_reply_to_user_id')
         self.lang: Optional[str] = self.get_additional_field('lang')
         self.non_public_metrics = self.get_additional_field('non_public_metrics')
-        self.public_metrics = self.get_additional_field('public_metrics')
-        self.original_metrics = self.get_additional_field('organic_metrics')
-        self.promoted_metrics = self.get_additional_field('promoted_metrics')
+
+        self.public_metrics: Optional[PublicMetric] = None
+        public_metrics: Optional[dict] = self.get_additional_field('public_metrics')
+        if public_metrics:
+            self.public_metrics = PublicMetric(public_metrics)
+
+        # self.original_metrics = self.get_additional_field('organic_metrics')
+        # self.promoted_metrics = self.get_additional_field('promoted_metrics')
         self.possibly_sensitive: Optional[bool] = True if self.get_additional_field('possibly_sensitive') == 'true' else False
         self.referenced_tweets = self.get_additional_field('referenced_tweets')
         self.source: Optional[str] = self.get_additional_field('source')
+        self.truncated: Optional[bool] = self.get_additional_field('truncated')
         self.withheld = self.get_additional_field('withheld')
 
     def get_additional_field(self, key: str) -> Optional[Any]:
