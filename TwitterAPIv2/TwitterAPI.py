@@ -1,3 +1,4 @@
+from TwitterAPIv2 import Poll
 import json
 from logging import Logger
 import logging
@@ -22,8 +23,15 @@ class TwitterAPI:
 
         self.__API_URL: str = 'https://api.twitter.com/2/tweets'
 
-    def get_tweet(self, id: str, expansions: List[Tweet.Expantion] = [], tweet_fields: List[Tweet.Field] = [], media_fields: List[Media.Field] = []) -> Tweet.Tweet:
-        params: Optional[Dict[str, str]] = self._make_params(expansions, tweet_fields, media_fields)
+    def get_tweet(
+            self,
+            id: str,
+            expansions: List[Tweet.Expantion] = [],
+            tweet_fields: List[Tweet.Field] = [],
+            media_fields: List[Media.Field] = [],
+            poll_fields: List[Poll.Field] = []) -> Tweet.Tweet:
+
+        params: Optional[Dict[str, str]] = self._make_params(expansions, tweet_fields, media_fields, poll_fields)
         logger.debug(params)
         response = requests.get(url=f'{self.__API_URL}/{id}', params=params, headers=self.__REQUEST_HEADERS)
         res_json = json.loads(response.text)
@@ -33,8 +41,14 @@ class TwitterAPI:
         else:
             return Tweet.Tweet(**res_json['data'])
 
-    def _make_params(self, expansions: List[Tweet.Expantion], tweet_fields: List[Tweet.Field], media_fields: List[Media.Field]) -> Optional[Dict[str, str]]:
-        if (not expansions) and (not tweet_fields) and (not media_fields):
+    def _make_params(
+            self,
+            expansions: List[Tweet.Expantion],
+            tweet_fields: List[Tweet.Field],
+            media_fields: List[Media.Field],
+            poll_fields: List[Poll.Field]) -> Optional[Dict[str, str]]:
+
+        if (not expansions) and (not tweet_fields) and (not media_fields) and (not poll_fields):
             return None
 
         params: Dict[str, str] = {}
@@ -44,5 +58,7 @@ class TwitterAPI:
             params['tweet.fields'] = ','.join(list(map(str, tweet_fields)))
         if media_fields:
             params['media.fields'] = ','.join(list(map(str, media_fields)))
+        if poll_fields:
+            params['poll.fields'] = ','.join(list(map(str, poll_fields)))
 
         return params

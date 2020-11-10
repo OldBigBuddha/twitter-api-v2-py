@@ -8,6 +8,8 @@ from typing import Dict, List
 from TwitterAPIv2 import Tweet
 from TwitterAPIv2 import Media
 from TwitterAPIv2.TwitterAPI import TwitterAPI
+from TwitterAPIv2.Tweet import Expantion
+from TwitterAPIv2 import Poll
 
 
 BEARER_TOKEN: str = os.environ['TWITTER_BEARER_TOKEN']
@@ -51,7 +53,7 @@ def test_normal_tweet(client: TwitterAPI) -> None:
     assert SAMPLE_TWEET['lang'] == tweet.lang, '言語が違います'
     assert datetime.fromisoformat(SAMPLE_TWEET['created_at']) == tweet.created_at, 'created_at が違います'
 
-    logger.info('[OK]normal tweet')
+    logger.info('[OK] normal tweet')
 
 
 def test_metrics(client: TwitterAPI) -> None:
@@ -64,7 +66,7 @@ def test_metrics(client: TwitterAPI) -> None:
     logger.debug(f'Like count is {tweet.public_metrics.like_count}')
     logger.debug(f'Reply count is {tweet.public_metrics.reply_count}')
 
-    logger.info('[OK]public_metric of normal tweet')
+    logger.info('[OK] public_metric of normal tweet')
 
 
 def test_media(client: TwitterAPI) -> None:
@@ -111,12 +113,61 @@ def test_media(client: TwitterAPI) -> None:
     logger.info('[OK] Media Object')
 
 
+def test_poll(client: TwitterAPI) -> None:
+
+    SAMPLE_TWEET: Dict = {
+        'id': '1199786642791452673',
+        'options': [
+            {
+                'label': '“C Sharp”',
+                'votes': 795
+            },
+            {
+                "label": "“C Hashtag”",
+                "votes": 156
+            }
+        ],
+        'status': Poll.Status.CLOSED,
+        'duration_minutes': 1440,
+        'end_datetime': datetime.fromisoformat('2019-11-28T20:26:41.000+00:00'),
+    }
+
+    POLL_FIELDS: List[Poll.Field] = [
+        Poll.Field.DURATION_MINUTES,
+        Poll.Field.END_DATETIME,
+        Poll.Field.VOTING_STATUS
+    ]
+
+    tweet: Tweet.Tweet = client.get_tweet(SAMPLE_TWEET['id'], [Expantion.POLL_IDS], poll_fields=POLL_FIELDS)
+
+    assert tweet, 'Tweet が取得できません。'
+    assert tweet.polls, 'Poll が取得できません。'
+
+    for poll in tweet.polls:
+        assert poll.id, 'Poll ID がありません。'
+        logger.debug(f'Poll ID: {poll.id}')
+
+        assert poll.options, 'Options がありません。'
+        for idx, option in enumerate(poll.options):
+            assert option.position == idx + 1, 'position が違います。'
+            assert option.label == SAMPLE_TWEET['options'][idx]['label'], 'label が違います。'
+            assert option.votes == SAMPLE_TWEET['options'][idx]['votes'], 'votes が違います。'
+            logger.debug(f'[{option.position}] {option.label} - {option.votes}')
+
+        assert poll.duration_minutes == SAMPLE_TWEET['duration_minutes'], 'duration_minutes が違います。'
+        assert poll.end_datetime == SAMPLE_TWEET['end_datetime'], 'datetime が違います。'
+        assert poll.voting_status == SAMPLE_TWEET['status'], 'voting_status が違います。'
+
+    logger.info('[OK] Poll Object')
+
+
 def main():
     twitter: TwitterAPI = TwitterAPI(BEARER_TOKEN)
 
     test_normal_tweet(twitter)
     test_metrics(twitter)
     test_media(twitter)
+    test_poll(twitter)
 
 
 if __name__ == "__main__":

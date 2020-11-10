@@ -4,6 +4,7 @@ from typing import Dict, List, Optional
 
 from TwitterAPIv2.Media import Media
 from TwitterAPIv2.Metric import PublicMetric
+from TwitterAPIv2.Poll import Poll
 from TwitterAPIv2.util import get_additional_field
 
 
@@ -53,7 +54,7 @@ class Tweet:
         self.tweet_id: str = id
         self.text: str = text
 
-        self.additional_fields: dict = kwargs
+        self.additional_fields: Dict = kwargs
 
         # Additional field
         self.attachments = get_additional_field(kwargs, 'attachments')
@@ -72,7 +73,7 @@ class Tweet:
         self.non_public_metrics = get_additional_field(kwargs, 'non_public_metrics')
 
         self.public_metrics: Optional[PublicMetric] = None
-        public_metrics: Optional[dict] = get_additional_field(kwargs, 'public_metrics')
+        public_metrics: Optional[Dict] = get_additional_field(kwargs, 'public_metrics')
         if public_metrics:
             self.public_metrics = PublicMetric(public_metrics)
 
@@ -90,3 +91,9 @@ class Tweet:
             self.medias = []
             for media in kwargs['media']:
                 self.medias.append(Media(media))
+
+        self.polls: Optional[List[Poll]] = None
+        if 'polls' in kwargs.keys():
+            self.polls = []
+            for poll in kwargs['polls']:
+                self.polls.append(Poll(poll))
