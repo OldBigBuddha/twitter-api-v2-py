@@ -5,9 +5,9 @@ name: Lint
 
 on:
   push:
-    branches: [ master ]
+    branches: [ develop ]
   pull_request:
-    branches: [ master ]
+    branches: [ develop ]
 
 jobs:
   build:
@@ -29,4 +29,4 @@ jobs:
         flake8 . --ignore=E501 --show-source
     - name: Lint with mypy
       run: |
-        mypy main.py TwitterAPIv2        
+        mypy main.py twitter_api_v2 tests
