@@ -2,10 +2,10 @@ from enum import Enum
 from datetime import datetime
 from typing import Dict, List, Optional
 
-from TwitterAPIv2.Media import Media
-from TwitterAPIv2.Metric import PublicMetric
-from TwitterAPIv2.Poll import Poll
-from TwitterAPIv2.util import get_additional_field
+from twitter_api_v2.Media import Media
+from twitter_api_v2.Metric import PublicMetric
+from twitter_api_v2.Poll import Poll
+from twitter_api_v2.util import get_additional_field
 
 
 class Field(Enum):

@@ -1,4 +1,3 @@
-from TwitterAPIv2 import Poll
 import json
 from logging import Logger
 import logging
@@ -6,8 +5,9 @@ from typing import Dict, List, Optional
 
 import requests
 
-from TwitterAPIv2 import Tweet
-from TwitterAPIv2 import Media
+from twitter_api_v2 import Tweet
+from twitter_api_v2 import Media
+from twitter_api_v2 import Poll
 
 
 logger: Logger = logging.getLogger(__name__)

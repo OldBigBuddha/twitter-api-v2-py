@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Dict, List, Optional
 
-from TwitterAPIv2.util import get_additional_field
+from twitter_api_v2.util import get_additional_field
 
 
 class Status(Enum):

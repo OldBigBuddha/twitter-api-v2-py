@@ -5,11 +5,11 @@ import os
 from typing import Dict, List
 
 
-from TwitterAPIv2 import Tweet
-from TwitterAPIv2 import Media
-from TwitterAPIv2.TwitterAPI import TwitterAPI
-from TwitterAPIv2.Tweet import Expantion
-from TwitterAPIv2 import Poll
+from twitter_api_v2 import Tweet
+from twitter_api_v2 import Media
+from twitter_api_v2.TwitterAPI import TwitterAPI
+from twitter_api_v2.Tweet import Expantion
+from twitter_api_v2 import Poll
 
 
 BEARER_TOKEN: str = os.environ['TWITTER_BEARER_TOKEN']

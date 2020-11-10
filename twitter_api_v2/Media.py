@@ -1,6 +1,7 @@
-from TwitterAPIv2.util import get_additional_field
 from enum import Enum
 from typing import Optional
+
+from twitter_api_v2.util import get_additional_field
 
 
 class Type(Enum):
