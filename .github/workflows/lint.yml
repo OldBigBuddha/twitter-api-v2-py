@@ -26,7 +26,10 @@ jobs:
         pip install -r requirements.txt
     - name: Lint with flake8
       run: |
-        flake8 . --ignore=E501 --show-source
+        flake8 . --show-source
+    - name: Lint with black
+      run: |
+        black . --check
     - name: Lint with mypy
       run: |
         mypy main.py twitter_api_v2 tests
