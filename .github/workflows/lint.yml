@@ -30,6 +30,9 @@ jobs:
     - name: Lint with black
       run: |
         black . --check
+    - name: Lint with isort
+      run: |
+        isort . --check
     - name: Lint with mypy
       run: |
         mypy main.py twitter_api_v2 tests
