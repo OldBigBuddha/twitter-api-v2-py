@@ -1,8 +1,11 @@
 # Twitter APIv2 for Python
 
-![alpha-1.0.0](https://img.shields.io/badge/version-alpha%201.0.0-red)
+![alpha-1.3.0](https://img.shields.io/badge/version-alpha%201.3.0-red)
 ![Python 3.9.0](https://img.shields.io/badge/python-3.9.0-blue)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
+
+![Lint](https://github.com/OldBigBuddha/twitter-api-v2-py/workflows/Lint/badge.svg)
+![pytest](https://github.com/OldBigBuddha/twitter-api-v2-py/workflows/pytest/badge.svg)
 
 Twitter APIv2: [Document](https://developer.twitter.com/en/docs/twitter-api/early-access)
 
