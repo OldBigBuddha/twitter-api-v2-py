@@ -1,9 +1,6 @@
 import os
 
-
-from twitter_api_v2 import TwitterAPI
-from twitter_api_v2 import Tweet
-
+from twitter_api_v2 import Tweet, TwitterAPI
 
 BEARER_TOKEN: str = os.environ["TWITTER_BEARER_TOKEN"]
 

@@ -4,10 +4,7 @@ from typing import Dict, List
 
 import pytest
 
-from twitter_api_v2 import TwitterAPI
-from twitter_api_v2 import Tweet
-from twitter_api_v2 import Media
-from twitter_api_v2 import Poll
+from twitter_api_v2 import Media, Poll, Tweet, TwitterAPI
 
 
 @pytest.fixture

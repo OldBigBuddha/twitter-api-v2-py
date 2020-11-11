@@ -1,14 +1,11 @@
 import json
-from logging import Logger
 import logging
+from logging import Logger
 from typing import Dict, List, Optional
 
 import requests
 
-from twitter_api_v2 import Tweet
-from twitter_api_v2 import Media
-from twitter_api_v2 import Poll
-
+from twitter_api_v2 import Media, Poll, Tweet
 
 logger: Logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
