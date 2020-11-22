@@ -24,6 +24,11 @@ def test_minimum_tweet(client: TwitterAPI.TwitterAPI) -> None:
     assert tweet.text == SAMPLE_TWEET["text"], "text field is wrong."
 
 
+def test_not_exist_tweet(client: TwitterAPI.TwitterAPI) -> None:
+    with pytest.raises(Exception):
+        client.get_tweet("")
+
+
 def test_normal_tweet(client: TwitterAPI.TwitterAPI) -> None:
 
     SAMPLE_TWEET: Dict = {
