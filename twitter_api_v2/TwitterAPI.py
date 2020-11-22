@@ -5,7 +5,7 @@ from typing import Dict, List, Optional
 
 import requests
 
-from twitter_api_v2 import Media, Poll, Tweet
+from twitter_api_v2 import Media, Place, Poll, Tweet
 
 logger: Logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -27,15 +27,22 @@ class TwitterAPI:
         tweet_fields: List[Tweet.Field] = [],
         media_fields: List[Media.Field] = [],
         poll_fields: List[Poll.Field] = [],
+        place_fields: List[Place.Field] = [],
     ) -> Tweet.Tweet:
 
         params: Optional[Dict[str, str]] = self._make_params(
-            expansions, tweet_fields, media_fields, poll_fields
+            expansions, tweet_fields, media_fields, poll_fields, place_fields
         )
         logger.debug(params)
         response = requests.get(
             url=f"{self.__API_URL}/{id}", params=params, headers=self.__REQUEST_HEADERS
         )
+
+        if response.status_code != 200:
+            raise Exception(
+                f"Request returned an error: {response.status_code} {response.text}"
+            )
+
         res_json = json.loads(response.text)
         logger.debug(res_json)
         if "includes" in res_json.keys():
@@ -49,6 +56,7 @@ class TwitterAPI:
         tweet_fields: List[Tweet.Field],
         media_fields: List[Media.Field],
         poll_fields: List[Poll.Field],
+        place_fields: List[Place.Field],
     ) -> Optional[Dict[str, str]]:
 
         if (
@@ -56,6 +64,7 @@ class TwitterAPI:
             and (not tweet_fields)
             and (not media_fields)
             and (not poll_fields)
+            and (not place_fields)
         ):
             return None
 
@@ -68,5 +77,7 @@ class TwitterAPI:
             params["media.fields"] = ",".join(list(map(str, media_fields)))
         if poll_fields:
             params["poll.fields"] = ",".join(list(map(str, poll_fields)))
+        if place_fields:
+            params["place.fields"] = ",".join(list(map(str, place_fields)))
 
         return params

@@ -4,7 +4,7 @@ from typing import Dict, List
 
 import pytest
 
-from twitter_api_v2 import Media, Poll, Tweet, TwitterAPI
+from twitter_api_v2 import Media, Place, Poll, Tweet, TwitterAPI
 
 
 @pytest.fixture
@@ -22,6 +22,11 @@ def test_minimum_tweet(client: TwitterAPI.TwitterAPI) -> None:
     tweet: Tweet.Tweet = client.get_tweet(SAMPLE_TWEET["id"])
 
     assert tweet.text == SAMPLE_TWEET["text"], "text field is wrong."
+
+
+def test_not_exist_tweet(client: TwitterAPI.TwitterAPI) -> None:
+    with pytest.raises(Exception):
+        client.get_tweet("")
 
 
 def test_normal_tweet(client: TwitterAPI.TwitterAPI) -> None:
