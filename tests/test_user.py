@@ -48,7 +48,7 @@ def test_not_exist_user(client: TwitterAPI.TwitterAPI) -> None:
         client.get_user_by_id("")
 
 
-def test_normal_user(client: TwitterAPI.TwitterAPI) -> None:
+def test_user_with_additional_fields(client: TwitterAPI.TwitterAPI) -> None:
 
     SAMPLE_USER: Dict = {
         # default fields
@@ -100,7 +100,7 @@ def test_normal_user(client: TwitterAPI.TwitterAPI) -> None:
     assert user.verified == SAMPLE_USER["verified"], "verified field is wrong."
 
 
-def test_metrics_object(client: TwitterAPI.TwitterAPI) -> None:
+def test_public_metric_for_user(client: TwitterAPI.TwitterAPI) -> None:
 
     user: User.User = client.get_user_by_id(
         "2244994945", user_fields=[User.Field.PUBLIC_METRICS]
