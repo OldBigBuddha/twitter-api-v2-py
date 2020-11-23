@@ -36,6 +36,12 @@ class TwitterAPI:
         response = requests.get(
             url=f"{self.__API_URL}/{id}", params=params, headers=self.__REQUEST_HEADERS
         )
+
+        if response.status_code != 200:
+            raise Exception(
+                f"Request returned an error: {response.status_code} {response.text}"
+            )
+
         res_json = json.loads(response.text)
         logger.debug(res_json)
         if "includes" in res_json.keys():
