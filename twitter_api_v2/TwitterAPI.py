@@ -4,8 +4,9 @@ from logging import Logger
 from typing import Dict, List, Optional
 
 import requests
+from requests.models import Response
 
-from twitter_api_v2 import Media, Poll, Tweet
+from twitter_api_v2 import Media, Poll, Tweet, User
 
 logger: Logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -18,7 +19,7 @@ class TwitterAPI:
             "Authorization": f"Bearer {self.__BEARER_TOKEN}"
         }
 
-        self.__API_URL: str = "https://api.twitter.com/2/tweets"
+        self.__API_URL: str = "https://api.twitter.com/2"
 
     def get_tweet(
         self,
@@ -33,8 +34,10 @@ class TwitterAPI:
             expansions, tweet_fields, media_fields, poll_fields
         )
         logger.debug(params)
-        response = requests.get(
-            url=f"{self.__API_URL}/{id}", params=params, headers=self.__REQUEST_HEADERS
+        response: Response = requests.get(
+            url=f"{self.__API_URL}/tweets/{id}",
+            params=params,
+            headers=self.__REQUEST_HEADERS,
         )
 
         if response.status_code != 200:
@@ -48,6 +51,28 @@ class TwitterAPI:
             return Tweet.Tweet(**res_json["data"], **res_json["includes"])
         else:
             return Tweet.Tweet(**res_json["data"])
+
+    def get_user(self, id: str, user_fields: List[User.Field] = []) -> User.User:
+        params: Optional[Dict[str, str]] = None
+        if user_fields:
+            params = {}
+            params["user.fields"] = ",".join(list(map(str, user_fields)))
+
+        response: Response = requests.get(
+            f"{self.__API_URL}/users/{id}",
+            params=params,
+            headers=self.__REQUEST_HEADERS,
+        )
+
+        if response.status_code != 200:
+            raise Exception(
+                f"Request returned an error: {response.status_code} {response.text}"
+            )
+
+        res_json = json.loads(response.text)
+        logger.debug(res_json)
+
+        return User.User(**res_json["data"])
 
     def _make_params(
         self,
