@@ -13,12 +13,22 @@ Twitter APIv2: [Document](https://developer.twitter.com/en/docs/twitter-api/earl
 
 Twitter API v2 をラップした感じのものを作りたい。
 
-## 今できること
+## Features
 
-- Tweet ID を指定して Tweet の一部を取得すること。
-  - Tweet 情報
-  - Poll 情報
-  - Media 情報
+- [x] Bearer Token
+- [ ] OAuth 1.1
+- [ ] Tweet lookup
+  - [x] Simple Tweet
+  - [x] With Media
+  - [x] With Public Metric
+  - [x] With Poll
+  - [ ] With Place
+  - [ ] multi tweets lookup
+- [ ] User lookup
+- [ ] Recent Search
+- [ ] Filtered stream
+- [ ] Sampled stream
+- [ ] Hide replies
 
 ## Dependencies
 
