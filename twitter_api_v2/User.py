@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Dict, Optional
 
-from twitter_api_v2.Metric import PublicMetric
+from twitter_api_v2.Metric import Metric
 from twitter_api_v2.util import get_additional_field
 
 
@@ -22,6 +22,14 @@ class Field(Enum):
 
     def __str__(self) -> str:
         return self.value
+
+
+class PublicMetric(Metric):
+    def __init__(self, data: Dict[str, int]) -> None:
+        self.followers_count: int = data["followers_count"]
+        self.following_count: int = data["following_count"]
+        self.tweet_count: int = data["tweet_count"]
+        self.listed_count: int = data["listed_count"]
 
 
 class User:

@@ -1,3 +1,10 @@
+from abc import ABCMeta
+
+
+class Metric(metaclass=ABCMeta):
+    pass
+
+
 class PublicMetric:
     def __init__(self, data: dict) -> None:
 

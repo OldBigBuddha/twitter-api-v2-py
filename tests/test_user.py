@@ -81,3 +81,16 @@ def test_normal_user(client: TwitterAPI.TwitterAPI) -> None:
     assert user.protected == SAMPLE_USER["protected"], "protected field is wrong."
     assert user.url == SAMPLE_USER["url"], "url field is wrong."
     assert user.verified == SAMPLE_USER["verified"], "verified field is wrong."
+
+
+def test_metrics_object(client: TwitterAPI.TwitterAPI) -> None:
+
+    user: User.User = client.get_user(
+        "2244994945", user_fields=[User.Field.PUBLIC_METRICS]
+    )
+
+    assert user.public_metrics, "public_metric should exist."
+    assert user.public_metrics.followers_count, "followers_count should exist."
+    assert user.public_metrics.following_count, "following_count should exist."
+    assert user.public_metrics.tweet_count, "tweet_count should exist."
+    assert user.public_metrics.listed_count, "listed_count should exist."
