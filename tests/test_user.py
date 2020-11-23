@@ -12,7 +12,7 @@ def client() -> TwitterAPI.TwitterAPI:
     return TwitterAPI.TwitterAPI(os.environ["TWITTER_BEARER_TOKEN"])
 
 
-def test_minimum_user(client: TwitterAPI.TwitterAPI) -> None:
+def test_get_user_by_id(client: TwitterAPI.TwitterAPI) -> None:
 
     SAMPLE_USER: Dict = {
         "id": "2244994945",
@@ -20,7 +20,22 @@ def test_minimum_user(client: TwitterAPI.TwitterAPI) -> None:
         "username": "TwitterDev",
     }
 
-    user: User.User = client.get_user(SAMPLE_USER["id"])
+    user: User.User = client.get_user_by_id(SAMPLE_USER["id"])
+
+    assert user.id == SAMPLE_USER["id"], "User ID is wrong."
+    assert user.name == SAMPLE_USER["name"], "name field is wrong."
+    assert user.username == SAMPLE_USER["username"], "username field is wrong."
+
+
+def test_get_user_by_username(client: TwitterAPI.TwitterAPI) -> None:
+
+    SAMPLE_USER: Dict = {
+        "id": "2244994945",
+        "name": "Twitter Dev",
+        "username": "TwitterDev",
+    }
+
+    user: User.User = client.get_user_by_username(SAMPLE_USER["username"])
 
     assert user.id == SAMPLE_USER["id"], "User ID is wrong."
     assert user.name == SAMPLE_USER["name"], "name field is wrong."
@@ -30,7 +45,7 @@ def test_minimum_user(client: TwitterAPI.TwitterAPI) -> None:
 def test_not_exist_user(client: TwitterAPI.TwitterAPI) -> None:
 
     with pytest.raises(Exception):
-        client.get_user("")
+        client.get_user_by_id("")
 
 
 def test_normal_user(client: TwitterAPI.TwitterAPI) -> None:
@@ -62,7 +77,9 @@ def test_normal_user(client: TwitterAPI.TwitterAPI) -> None:
         User.Field.VERIFIED,
     ]
 
-    user: User.User = client.get_user(SAMPLE_USER["id"], user_fields=SAMPLE_USER_FIELDS)
+    user: User.User = client.get_user_by_id(
+        SAMPLE_USER["id"], user_fields=SAMPLE_USER_FIELDS
+    )
 
     assert user.id == SAMPLE_USER["id"], "User ID is wrong."
     assert user.name == SAMPLE_USER["name"], "name field is wrong."
@@ -85,7 +102,7 @@ def test_normal_user(client: TwitterAPI.TwitterAPI) -> None:
 
 def test_metrics_object(client: TwitterAPI.TwitterAPI) -> None:
 
-    user: User.User = client.get_user(
+    user: User.User = client.get_user_by_id(
         "2244994945", user_fields=[User.Field.PUBLIC_METRICS]
     )
 

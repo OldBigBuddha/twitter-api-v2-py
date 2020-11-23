@@ -43,7 +43,10 @@ class User:
         if (created_at := get_additional_field(kwargs, "created_at")) is not None:
             self.created_at = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
         self.description: Optional[str] = get_additional_field(kwargs, "description")
+
+        # TODO: Implement Entity object
         self.entities: Optional[Dict] = None
+
         self.location: Optional[str] = get_additional_field(kwargs, "location")
         self.pinned_tweet_id: Optional[str] = get_additional_field(
             kwargs, "pinned_tweet_id"
