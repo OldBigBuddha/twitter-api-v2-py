@@ -1,7 +1,10 @@
+import logging
 from datetime import datetime
 from enum import Enum
+from logging import Logger
 from typing import Dict, List, Optional
 
+from twitter_api_v2.Entities import Annotation, CashTag, Entities, HashTag, Mention, Url
 from twitter_api_v2.Media import Media
 from twitter_api_v2.Metric import PublicMetric
 from twitter_api_v2.Poll import Poll
@@ -49,14 +52,15 @@ class Expantion(Enum):
 
 class Tweet:
     def __init__(self, id: str, text: str, *args, **kwargs) -> None:
+
+        self.logger: Logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.DEBUG)
+
         # Default fields
-        self.tweet_id: str = id
+        self.id: str = id
         self.text: str = text
 
-        self.additional_fields: Dict = kwargs
-
         # Additional field
-        self.attachments = get_additional_field(kwargs, "attachments")
         self.author_id: Optional[str] = get_additional_field(kwargs, "author_id")
         self.context_annotations = get_additional_field(kwargs, "context_annotations")
         self.conversation_id = get_additional_field(kwargs, "conversation_id")
@@ -65,19 +69,76 @@ class Tweet:
         if (created_at := get_additional_field(kwargs, "created_at")) is not None:
             self.created_at = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
 
-        self.entities = get_additional_field(kwargs, "entities")
+        # TODO: Implement entities
+        self.entities: Optional[Entities] = None
+        if "entities" in kwargs.keys():
+            entities: Entities = Entities()
+            entities_res: Dict = kwargs["entities"]
+
+            if "annotations" in entities_res.keys():
+                entities.annotations = []
+                annotations: List[Dict] = entities_res["annotations"]
+                for annotation in annotations:
+                    entities.annotations.append(
+                        Annotation(
+                            annotation["start"],
+                            annotation["end"],
+                            annotation["probability"],
+                            annotation["type"],
+                            annotation["normalized_text"],
+                        )
+                    )
+
+            if "cashtags" in entities_res.keys():
+                entities.cashtags = []
+                cashtags: List[Dict] = entities_res["cashtags"]
+                for cashtag in cashtags:
+                    entities.cashtags.append(
+                        CashTag(cashtag["start"], cashtag["end"], cashtag["tag"])
+                    )
+
+            if "hashtags" in entities_res.keys():
+                entities.hashtags = []
+                hashtags: List[Dict] = entities_res["hashtags"]
+                for hashtag in hashtags:
+                    entities.hashtags.append(
+                        HashTag(hashtag["start"], hashtag["end"], hashtag["tag"])
+                    )
+
+            if "mentions" in entities_res.keys():
+                entities.mentions = []
+                mentions: List[Dict] = entities_res["mentions"]
+                for mention in mentions:
+                    entities.mentions.append(
+                        Mention(mention["start"], mention["end"], mention["tag"])
+                    )
+
+            if "urls" in entities_res.keys():
+                entities.urls = []
+                urls: List[Dict] = entities_res["urls"]
+                for url in urls:
+                    entities.urls.append(
+                        Url(
+                            url["start"],
+                            url["end"],
+                            url["url"],
+                            url["expanded_url"],
+                            url["display_url"],
+                        )
+                    )
+
+            self.entities = entities
+
+        # TODO: Implement Place Object
         self.geo = get_additional_field(kwargs, "geo")
+
         self.in_reply_to_user_id = get_additional_field(kwargs, "in_reply_to_user_id")
         self.lang: Optional[str] = get_additional_field(kwargs, "lang")
-        self.non_public_metrics = get_additional_field(kwargs, "non_public_metrics")
 
-        self.public_metrics: Optional[PublicMetric] = None
-        public_metrics: Optional[Dict] = get_additional_field(kwargs, "public_metrics")
-        if public_metrics:
-            self.public_metrics = PublicMetric(public_metrics)
+        self.public_metrics: Optional[PublicMetric] = get_additional_field(
+            kwargs, "public_metrics", PublicMetric
+        )
 
-        # self.original_metrics = get_additional_field('organic_metrics')
-        # self.promoted_metrics = get_additional_field('promoted_metrics')
         self.possibly_sensitive: Optional[bool] = (
             True
             if get_additional_field(kwargs, "possibly_sensitive") == "true"
