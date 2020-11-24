@@ -52,7 +52,7 @@ class TwitterAPI:
         else:
             return Tweet.Tweet(**res_json["data"])
 
-    def get_user(self, id: str, user_fields: List[User.Field] = []) -> User.User:
+    def get_user_by_id(self, id: str, user_fields: List[User.Field] = []) -> User.User:
         params: Optional[Dict[str, str]] = None
         if user_fields:
             params = {}
@@ -60,6 +60,30 @@ class TwitterAPI:
 
         response: Response = requests.get(
             f"{self.__API_URL}/users/{id}",
+            params=params,
+            headers=self.__REQUEST_HEADERS,
+        )
+
+        if response.status_code != 200:
+            raise Exception(
+                f"Request returned an error: {response.status_code} {response.text}"
+            )
+
+        res_json = json.loads(response.text)
+        logger.debug(res_json)
+
+        return User.User(**res_json["data"])
+
+    def get_user_by_username(
+        self, username: str, user_fields: List[User.Field] = []
+    ) -> User.User:
+        params: Optional[Dict[str, str]] = None
+        if user_fields:
+            params = {}
+            params["user.fields"] = ",".join(list(map(str, user_fields)))
+
+        response: Response = requests.get(
+            f"{self.__API_URL}/users/by/username/{username}",
             params=params,
             headers=self.__REQUEST_HEADERS,
         )
