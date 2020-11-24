@@ -219,3 +219,20 @@ def test_entities_for_tweet(client: TwitterAPI.TwitterAPI) -> None:
         assert (
             annotation.normalized_text == SAMPLE_ANNOTATION[idx]["normalized_text"]
         ), f"Annotation{idx}: normalized_text is wrong."
+
+    assert tweet.entities.urls, "urls should exist."
+    SAMPLE_URLS: List[Dict] = entities["urls"]
+    for idx, url in enumerate(tweet.entities.urls):
+        assert url.start == SAMPLE_URLS[idx]["start"], f"URL[{idx}]: start is wrong."
+        assert url.end == SAMPLE_URLS[idx]["end"], f"URL[{idx}]: end is wrong."
+        assert url.url == SAMPLE_URLS[idx]["url"], f"URL[{idx}]: url is wrong."
+        assert (
+            url.expanded_url == SAMPLE_URLS[idx]["expanded_url"]
+        ), f"URL[{idx}]: expanded_url is wrong."
+        assert (
+            url.display_url == SAMPLE_URLS[idx]["display_url"]
+        ), f"URL[{idx}]: display_url is wrong."
+
+    assert tweet.entities.cashtags is None, "cashtags should be None."
+    assert tweet.entities.hashtags is None, "hashtags should be None."
+    assert tweet.entities.mentions is None, "mentions should be None."
