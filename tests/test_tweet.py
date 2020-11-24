@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict, List, Union
 
 import pytest
 
@@ -55,7 +55,7 @@ def test_normal_tweet(client: TwitterAPI.TwitterAPI) -> None:
         SAMPLE_TWEET["id"], tweet_fields=SAMPLE_TWEET_FIELDS
     )
 
-    assert SAMPLE_TWEET["id"] == tweet.tweet_id, "Tweet ID is wrong."
+    assert SAMPLE_TWEET["id"] == tweet.id, "Tweet ID is wrong."
     assert SAMPLE_TWEET["text"] == tweet.text, "text is wrong."
 
     assert SAMPLE_TWEET["author_id"] == tweet.author_id, "User ID is wrong."
@@ -163,3 +163,59 @@ def test_poll_object(client: TwitterAPI.TwitterAPI) -> None:
         ), "duration_minutes is wrong."
         assert poll.end_datetime == SAMPLE_TWEET["end_datetime"], "datetime is wrong."
         assert poll.voting_status == SAMPLE_TWEET["status"], "voting_status is wrong."
+
+
+def test_entities_for_tweet(client: TwitterAPI.TwitterAPI) -> None:
+    SAMPLE_TWEET: Dict = {
+        # default fields
+        "id": "1212092628029698048",
+        "text": "We believe the best future version of our API will come from building it with YOU. Here\u2019s to another great year with everyone who builds on the Twitter platform. We can\u2019t wait to continue working with you in the new year. https://t.co/yvxdK6aOo2",
+        "entities": {
+            "annotations": [
+                {
+                    "start": 144,
+                    "end": 150,
+                    "probability": 0.626,
+                    "type": "Product",
+                    "normalized_text": "Twitter",
+                }
+            ],
+            "urls": [
+                {
+                    "start": 222,
+                    "end": 245,
+                    "url": "https://t.co/yvxdK6aOo2",
+                    "expanded_url": "https://twitter.com/LovesNandos/status/1211797914437259264/photo/1",
+                    "display_url": "pic.twitter.com/yvxdK6aOo2",
+                }
+            ],
+        },
+    }
+
+    tweet: Tweet.Tweet = client.get_tweet(
+        SAMPLE_TWEET["id"], tweet_fields=[Tweet.Field.ENTITIES]
+    )
+
+    assert tweet.id == SAMPLE_TWEET["id"], "Tweet ID is wrong."
+    assert tweet.entities, "entities should exist."
+
+    entities: Dict = SAMPLE_TWEET["entities"]
+
+    assert tweet.entities.annotations, "annotations should exist."
+    SAMPLE_ANNOTATION: List[Dict] = entities["annotations"]
+    for idx, annotation in enumerate(tweet.entities.annotations):
+        assert (
+            annotation.start == SAMPLE_ANNOTATION[idx]["start"]
+        ), f"Annotation{idx}: start is wrong."
+        assert (
+            annotation.end == SAMPLE_ANNOTATION[idx]["end"]
+        ), f"Annotation{idx}: end is wrong."
+        assert (
+            annotation.probability == SAMPLE_ANNOTATION[idx]["probability"]
+        ), f"Annotation{idx}: probability is wrong."
+        assert (
+            annotation.type == SAMPLE_ANNOTATION[idx]["type"]
+        ), f"Annotation{idx}: type is wrong."
+        assert (
+            annotation.normalized_text == SAMPLE_ANNOTATION[idx]["normalized_text"]
+        ), f"Annotation{idx}: normalized_text is wrong."

@@ -1,6 +1,6 @@
 from abc import ABCMeta
 from enum import Enum
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 
 class Entity(metaclass=ABCMeta):
@@ -20,7 +20,7 @@ class Annotation(Entity):
         self.type: str = type
 
 
-class CashTag:
+class CashTag(Entity):
     def __init__(self, start: int, end: int, tag: str) -> None:
 
         self.start: int = start
@@ -29,7 +29,7 @@ class CashTag:
         self.tag: str = tag
 
 
-class HashTag:
+class HashTag(Entity):
     def __init__(self, start: int, end: int, tag: str) -> None:
 
         self.start: int = start
@@ -38,7 +38,7 @@ class HashTag:
         self.tag: str = tag
 
 
-class Mention:
+class Mention(Entity):
     def __init__(self, start: int, end: int, tag: str) -> None:
 
         self.start: int = start
@@ -47,7 +47,7 @@ class Mention:
         self.tag: str = tag
 
 
-class Url:
+class Url(Entity):
     def __init__(
         self, start: int, end: int, url: str, expanded_url: str, display_url: str
     ) -> None:
@@ -58,6 +58,15 @@ class Url:
         self.url: str = url
         self.expanded_url: str = expanded_url
         self.display_url: str = display_url
+
+
+class Entities:
+    def __init__(self) -> None:
+        self.annotations: Optional[List[Annotation]] = None
+        self.cashtags: Optional[List[CashTag]] = None
+        self.hashtags: Optional[List[HashTag]] = None
+        self.mentions: Optional[List[Mention]] = None
+        self.urls: Optional[List[Url]] = None
 
 
 class Size:
