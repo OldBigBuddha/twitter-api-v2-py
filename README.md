@@ -1,6 +1,6 @@
 # Twitter APIv2 for Python
 
-![alpha-1.5.0](https://img.shields.io/badge/version-alpha%201.5.0-red)
+![alpha-1.6.0](https://img.shields.io/badge/version-alpha%201.6.0-red)
 ![Python 3.9.0](https://img.shields.io/badge/python-3.9.0-blue)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 
@@ -18,13 +18,19 @@ Twitter API v2 をラップした感じのものを作りたい。
 - [x] Bearer Token
 - [ ] OAuth 1.1
 - [ ] Tweet lookup
-  - [x] Simple Tweet
+  - [x] Get Tweet
+  - [x] With Entities
   - [x] With Media
   - [x] With Public Metric
   - [x] With Poll
   - [ ] With Place
-  - [ ] multi tweets lookup
+  - [ ] Multi Tweets
 - [x] User lookup
+  - [x] Get User
+    - [x] By ID
+    - [x] By ID
+  - [x] With Entities
+  - [ ] Multi Users
 - [ ] Recent Search
 - [ ] Filtered stream
 - [ ] Sampled stream
