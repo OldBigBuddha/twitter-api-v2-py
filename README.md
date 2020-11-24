@@ -1,6 +1,6 @@
 # Twitter APIv2 for Python
 
-![alpha-1.4.0](https://img.shields.io/badge/version-alpha%201.4.0-red)
+![alpha-1.5.0](https://img.shields.io/badge/version-alpha%201.5.0-red)
 ![Python 3.9.0](https://img.shields.io/badge/python-3.9.0-blue)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 
@@ -24,7 +24,7 @@ Twitter API v2 をラップした感じのものを作りたい。
   - [x] With Poll
   - [ ] With Place
   - [ ] multi tweets lookup
-- [ ] User lookup
+- [x] User lookup
 - [ ] Recent Search
 - [ ] Filtered stream
 - [ ] Sampled stream
