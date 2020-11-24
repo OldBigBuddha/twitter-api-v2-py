@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from typing import Dict, List, Union
+from typing import Dict, List
 
 import pytest
 

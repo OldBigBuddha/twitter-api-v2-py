@@ -1,8 +1,8 @@
 import logging
 from datetime import datetime
 from enum import Enum
-from logging import Logger, log
-from typing import Dict, List, Optional, Union
+from logging import Logger
+from typing import Dict, List, Optional
 
 from twitter_api_v2.Entities import Annotation, CashTag, Entities, HashTag, Mention, Url
 from twitter_api_v2.Media import Media
