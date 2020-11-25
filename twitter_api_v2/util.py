@@ -6,6 +6,7 @@ def get_additional_field(data: dict, key: str, converter=None) -> Optional[Any]:
         if converter:
             return converter(data[key])
         else:
+            # TODO: Use **data[key]
             return data[key]
     else:
         return None

@@ -236,3 +236,118 @@ def test_entities_for_tweet(client: TwitterAPI.TwitterAPI) -> None:
     assert tweet.entities.cashtags is None, "cashtags should be None."
     assert tweet.entities.hashtags is None, "hashtags should be None."
     assert tweet.entities.mentions is None, "mentions should be None."
+
+
+def test_context_annotation(client: TwitterAPI.TwitterAPI) -> None:
+    SAMPLE_TWEET: Dict = {
+        "id": "1212092628029698048",
+        "text": "We believe the best future version of our API will come from building it with YOU. Here’s to another great year with everyone who builds on the Twitter platform. We can’t wait to continue working with you in the new year. https://t.co/yvxdK6aOo2",
+        "context_annotations": [
+            {
+                "domain": {
+                    "id": "119",
+                    "name": "Holiday",
+                    "description": "Holidays like Christmas or Halloween",
+                },
+                "entity": {"id": "1186637514896920576", "name": " New Years Eve"},
+            },
+            {
+                "domain": {
+                    "id": "119",
+                    "name": "Holiday",
+                    "description": "Holidays like Christmas or Halloween",
+                },
+                "entity": {
+                    "id": "1206982436287963136",
+                    "name": "Happy New Year: It’s finally 2020 everywhere!",
+                    "description": "Catch fireworks and other celebrations as people across the globe enter the new year.\nPhoto via @GettyImages ",
+                },
+            },
+            {
+                "domain": {
+                    "id": "46",
+                    "name": "Brand Category",
+                    "description": "Categories within Brand Verticals that narrow down the scope of Brands",
+                },
+                "entity": {"id": "781974596752842752", "name": "Services"},
+            },
+            {
+                "domain": {
+                    "id": "47",
+                    "name": "Brand",
+                    "description": "Brands and Companies",
+                },
+                "entity": {"id": "10045225402", "name": "Twitter"},
+            },
+            {
+                "domain": {
+                    "id": "119",
+                    "name": "Holiday",
+                    "description": "Holidays like Christmas or Halloween",
+                },
+                "entity": {
+                    "id": "1206982436287963136",
+                    "name": "Happy New Year: It’s finally 2020 everywhere!",
+                    "description": "Catch fireworks and other celebrations as people across the globe enter the new year.\nPhoto via @GettyImages ",
+                },
+            },
+        ],
+        "entities": {
+            "annotations": [
+                {
+                    "start": 144,
+                    "end": 150,
+                    "probability": 0.626,
+                    "type": "Product",
+                    "normalized_text": "Twitter",
+                }
+            ],
+            "urls": [
+                {
+                    "start": 222,
+                    "end": 245,
+                    "url": "https://t.co/yvxdK6aOo2",
+                    "expanded_url": "https://twitter.com/LovesNandos/status/1211797914437259264/photo/1",
+                    "display_url": "pic.twitter.com/yvxdK6aOo2",
+                }
+            ],
+        },
+    }
+
+    tweet: Tweet.Tweet = client.get_tweet(
+        SAMPLE_TWEET["id"],
+        tweet_fields=[Tweet.Field.CONTEXT_ANNOTATIONS, Tweet.Field.ENTITIES],
+    )
+
+    assert tweet.id == SAMPLE_TWEET["id"], "Tweet ID is wrong."
+    assert tweet.text == SAMPLE_TWEET["text"], "text is wrong."
+
+    assert tweet.context_annotations, "context_annotations should exist."
+
+    SAMPLE_CONTEXT_ANNOTATIONS: List[Dict] = SAMPLE_TWEET["context_annotations"]
+    for idx, context_annotation in enumerate(tweet.context_annotations):
+        if (domain := context_annotation[0]) :
+            SAMPLE_DOMAIN: Dict = SAMPLE_CONTEXT_ANNOTATIONS[idx]["domain"]
+            assert (
+                domain.id == SAMPLE_DOMAIN["id"]
+            ), f"context_annotation[{idx}].domain.id is wrong."
+            assert (
+                domain.name == SAMPLE_DOMAIN["name"]
+            ), f"context_annotation[{idx}].domain.name is wrong."
+            if domain.description:
+                assert (
+                    domain.description == SAMPLE_DOMAIN["description"]
+                ), f"context_annotation[{idx}].domain.description is wrong."
+
+        if (entity := context_annotation[1]) :
+            SAMPLE_ENTITY: Dict = SAMPLE_CONTEXT_ANNOTATIONS[idx]["entity"]
+            assert (
+                entity.id == SAMPLE_ENTITY["id"]
+            ), f"context_annotation[{idx}].domain.id is wrong."
+            assert (
+                entity.name == SAMPLE_ENTITY["name"]
+            ), f"context_annotation[{idx}].domain.name is wrong."
+            if entity.description:
+                assert (
+                    entity.description == SAMPLE_ENTITY["description"]
+                ), f"context_annotation[{idx}].domain.description is wrong."

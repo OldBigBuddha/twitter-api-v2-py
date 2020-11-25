@@ -1,13 +1,8 @@
-from abc import ABCMeta
 from enum import Enum
-from typing import List, Optional, Tuple
+from typing import Optional, Tuple
 
 
-class Entity(metaclass=ABCMeta):
-    pass
-
-
-class Annotation(Entity):
+class Annotation:
     def __init__(
         self, start: int, end: int, probability: float, type: str, normalized_text: str
     ) -> None:
@@ -20,7 +15,7 @@ class Annotation(Entity):
         self.type: str = type
 
 
-class CashTag(Entity):
+class CashTag:
     def __init__(self, start: int, end: int, tag: str) -> None:
 
         self.start: int = start
@@ -29,7 +24,7 @@ class CashTag(Entity):
         self.tag: str = tag
 
 
-class HashTag(Entity):
+class HashTag:
     def __init__(self, start: int, end: int, tag: str) -> None:
 
         self.start: int = start
@@ -38,7 +33,7 @@ class HashTag(Entity):
         self.tag: str = tag
 
 
-class Mention(Entity):
+class Mention:
     def __init__(self, start: int, end: int, tag: str) -> None:
 
         self.start: int = start
@@ -47,7 +42,7 @@ class Mention(Entity):
         self.tag: str = tag
 
 
-class Url(Entity):
+class Url:
     def __init__(
         self, start: int, end: int, url: str, expanded_url: str, display_url: str
     ) -> None:
@@ -58,15 +53,6 @@ class Url(Entity):
         self.url: str = url
         self.expanded_url: str = expanded_url
         self.display_url: str = display_url
-
-
-class Entities:
-    def __init__(self) -> None:
-        self.annotations: Optional[List[Annotation]] = None
-        self.cashtags: Optional[List[CashTag]] = None
-        self.hashtags: Optional[List[HashTag]] = None
-        self.mentions: Optional[List[Mention]] = None
-        self.urls: Optional[List[Url]] = None
 
 
 class Size:
@@ -92,7 +78,7 @@ class MediaType(Enum):
     VIDEO = "video"
 
 
-class Media(Entity):
+class Media:
     def __init__(self, obj: dict) -> None:
 
         self.display_url: str = obj["display_url"]

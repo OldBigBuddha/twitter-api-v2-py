@@ -4,8 +4,7 @@ from typing import Dict, List
 
 import pytest
 
-from twitter_api_v2 import TwitterAPI, User
-from twitter_api_v2.Entities import Url
+from twitter_api_v2 import Entity, TwitterAPI, User
 
 
 @pytest.fixture
@@ -180,7 +179,7 @@ def test_entities_for_user(client: TwitterAPI.TwitterAPI) -> None:
         ), f"hashtags[{idx}]: tag is wrong."
 
     # url
-    assert isinstance(user.url, Url), "url's type is wrong"
+    assert isinstance(user.url, Entity.Url), "url's type is wrong"
 
     assert user.url.url == SAMPLE_USER["url"]["url"], "url is wrong."
     assert user.url.start == SAMPLE_USER["url"]["start"], "url start is wrong."
