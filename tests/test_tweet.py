@@ -4,7 +4,7 @@ from typing import Dict, List
 
 import pytest
 
-from twitter_api_v2 import ContextAnnotation, Media, Poll, Tweet, TwitterAPI
+from twitter_api_v2 import Media, Poll, Tweet, TwitterAPI
 
 
 @pytest.fixture
