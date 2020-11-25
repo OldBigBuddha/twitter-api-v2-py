@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Dict, List, Optional, Union
 
-from twitter_api_v2.Entities import CashTag, HashTag, Mention, Url
+from twitter_api_v2 import Entity
 from twitter_api_v2.Metric import Metric
 from twitter_api_v2.util import get_additional_field
 
@@ -33,10 +33,10 @@ class Description:
 
         self.text: str = text
 
-        self.cashtags: Optional[List[CashTag]] = None
-        self.hashtags: Optional[List[HashTag]] = None
-        self.mentions: Optional[List[Mention]] = None
-        self.urls: Optional[List[Url]] = None
+        self.cashtags: Optional[List[Entity.CashTag]] = None
+        self.hashtags: Optional[List[Entity.HashTag]] = None
+        self.mentions: Optional[List[Entity.Mention]] = None
+        self.urls: Optional[List[Entity.Url]] = None
 
 
 class PublicMetric(Metric):
@@ -73,7 +73,9 @@ class User:
                     description.cashtags = []
                     for cashtag in cashtags:
                         description.cashtags.append(
-                            CashTag(cashtag["start"], cashtag["end"], cashtag["tag"])
+                            Entity.CashTag(
+                                cashtag["start"], cashtag["end"], cashtag["tag"]
+                            )
                         )
 
                 if "hashtags" in description_res.keys():
@@ -81,7 +83,9 @@ class User:
                     description.hashtags = []
                     for hashtag in hashtags:
                         description.hashtags.append(
-                            HashTag(hashtag["start"], hashtag["end"], hashtag["tag"])
+                            Entity.HashTag(
+                                hashtag["start"], hashtag["end"], hashtag["tag"]
+                            )
                         )
 
                 if "mentions" in description_res.keys():
@@ -89,7 +93,9 @@ class User:
                     description.mentions = []
                     for mention in mentions:
                         description.mentions.append(
-                            Mention(mention["start"], mention["end"], mention["tag"])
+                            Entity.Mention(
+                                mention["start"], mention["end"], mention["tag"]
+                            )
                         )
 
                 if "urls" in description_res.keys():
@@ -97,7 +103,7 @@ class User:
                     description.urls = []
                     for url in urls:
                         description.urls.append(
-                            Url(
+                            Entity.Url(
                                 url["start"],
                                 url["end"],
                                 url["url"],
@@ -120,10 +126,10 @@ class User:
             kwargs, "public_metrics", PublicMetric
         )
 
-        self.url: Optional[Union[str, Url]] = get_additional_field(kwargs, "url")
+        self.url: Optional[Union[str, Entity.Url]] = get_additional_field(kwargs, "url")
         if "entities" in kwargs.keys() and "url" in kwargs["entities"].keys():
             url_res: Dict = kwargs["entities"]["url"]["urls"][0]
-            self.url = Url(
+            self.url = Entity.Url(
                 url_res["start"],
                 url_res["end"],
                 url_res["url"],
