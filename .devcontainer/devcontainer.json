@@ -1,0 +1,56 @@
+{
+	"name": "Python 3.9 devContainer",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": "..",
+		"args": {
+			// Update 'VARIANT' to pick a Python version: 3, 3.6, 3.7, 3.8, 3.9
+			"VARIANT": "3.9",
+			// Options
+			"INSTALL_NODE": "false",
+			"NODE_VERSION": "lts/*",
+		}
+	},
+	"runArgs": ["--env-file", ".env"],
+	"remoteEnv": {
+		"TWITTER_BEARER_TOKEN": "${containerEnv:TWITTER_BEARER_TOKEN}"
+	},
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+		"editor.tabSize": 4,
+		"editor.formatOnSave": true,
+		"editor.formatOnPaste": false,
+		"editor.formatOnType": false,
+		"editor.insertSpaces": true,
+		"editor.codeActionsOnSave": {
+			"source.organizeImports": true
+		},
+		"python.pythonPath": "/usr/local/bin/python",
+		"python.linting.enabled": true,
+		"python.linting.pylintEnabled": false,
+		"python.linting.pycodestyleEnabled": false,
+		"python.linting.flake8Enabled": true,
+		"python.formatting.provider": "black",
+		"python.testing.unittestEnabled": false,
+		"python.testing.nosetestsEnabled": false,
+		"python.testing.pytestEnabled": true,
+		"python.testing.pytestArgs": [
+			"-vv",
+			"--show-capture=all",
+			"tests"
+		],
+		"autoDocstring.docstringFormat": "numpy",
+		"python.languageServer": "Pylance",
+	},
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"ms-python.python",
+		"ms-python.vscode-pylance",
+	],
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "pip3 install --user -r requirements.txt",
+	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "vscode"
+}

@@ -9,9 +9,13 @@
 
 Twitter APIv2: [Document](https://developer.twitter.com/en/docs/twitter-api/early-access)
 
-## 目標
+## Goal
 
-Twitter API v2 をラップした感じのものを作りたい。
+Full support Twitter API v2.
+
+## Development
+
+Read [HOW_TO_DEVELOP](./HOW_TO_DEVELOP.md).
 
 ## Features
 
